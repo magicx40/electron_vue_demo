@@ -84,6 +84,9 @@ export default defineComponent({
                   item.status = "OK";
                   item.oldPath = okPath.newPath;
                   item.newPath = okPath.newPath;
+                  setTimeout(() => {
+                    item.status = 'READY';
+                  },1000);
                 }
               });
             });
