@@ -1,6 +1,9 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, protocol, ipcMain, dialog } = require('electron')
 const path = require('path')
+import { readdir } from 'fs/promises';
+import { DIALOG_OPENFILE, FS_READFILES } from '../ipcApi/ipcApiMap';
+
 function createWindow() {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -22,17 +25,54 @@ function createWindow() {
 
 }
 
+async function handleFileOpen() {
+    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (canceled) {
+        return
+    } else {
+        return filePaths[0];
+    }
+}
+
+async function handleReadFiles(event, filePath) {
+    console.log('filePath:', filePath);
+    let filesArr = [];
+    try {
+        const files = await readdir(filePath, { withFileTypes: true });
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            let fileFullPath = path.join(filePath, file.name);
+            if (file.isFile()) {
+                filesArr.push(fileFullPath);
+            }
+        }
+    } catch (error) {
+        console.log('error:',error);
+        return;
+    }
+    console.log('filesArr:', filesArr);
+    return filesArr;
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     createWindow()
+    // 注册自定义协议，拦截现有协议的请求
+    protocol.registerFileProtocol('atom', (request, callback) => {
+        const url = request.url.substr(7)
+        callback(decodeURI(path.normalize(url)))
+    })
 
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
+
+    ipcMain.handle(DIALOG_OPENFILE, handleFileOpen)
+    ipcMain.handle(FS_READFILES, handleReadFiles)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

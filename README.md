@@ -14,3 +14,19 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+## issue
+1. 如何读取本地文件夹的文件?
+可以使用`protocol`Module 来注册自定义协议并拦截现有的协议请求
+```
+Main process:
+app.whenReady().then(() => {
+  //This needs to be used after app. Ready is triggered
+  protocol.registerFileProtocol('atom', (request, callback) => {
+    const url = request.url.substr(7)
+    callback(decodeURI(path.normalize(url)))
+  })
+})
+Rendering process:
+<img src="atom:///本地文件路径"
+```
