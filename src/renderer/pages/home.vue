@@ -78,23 +78,29 @@ export default defineComponent({
           .rename(needRenamePaths)
           .then((result: any) => {
             console.log("success!");
-            obj.tableData.forEach(item => {
-                needRenamePaths.forEach(okPath => {
-                    if (item.id === okPath.id) {
-                        item.status = 'OK';
-                    }
-                });
+            obj.tableData.forEach((item) => {
+              needRenamePaths.forEach((okPath) => {
+                if (item.id === okPath.id) {
+                  item.status = "OK";
+                  item.oldPath = okPath.newPath;
+                  item.newPath = okPath.newPath;
+                }
+              });
             });
+            needRenamePaths = [];
           })
           .catch((error) => {
             console.error(error);
-            obj.tableData.forEach(item => {
-                needRenamePaths.forEach(okPath => {
-                    if (item.id === okPath.id) {
-                        item.status = 'ERROR';
-                    }
-                });
+            obj.tableData.forEach((item) => {
+              needRenamePaths.forEach((okPath) => {
+                if (item.id === okPath.id) {
+                  item.status = "ERROR";
+                  item.oldPath = okPath.oldPath;
+                  item.newPath = okPath.oldPath;
+                }
+              });
             });
+            needRenamePaths = [];
           });
       }
     };
