@@ -11,7 +11,8 @@
     "isolatedModules": false,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./@types"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/main/main.js"],
   "references": [{ "path": "./tsconfig.node.json" }]

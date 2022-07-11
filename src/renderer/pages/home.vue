@@ -1,31 +1,23 @@
 <template>
-  <h2>文件重命名工具</h2>
-  <el-button class="primary" @click="handleBtnClick">选择文件夹</el-button>
-  <el-table :data="obj.tableData" style="width: 100%">
-    <el-table-column prop="oldPath" label="Old Name" />
-    <el-table-column prop="newPath" label="New Name">
-      <template #default="scope">
-        <div
-          v-if="!scope.row.isRename"
-          class="show_state"
-          @click.stop="scope.row.isRename = true"
-        >
-          {{ scope.row.newPath }}
-        </div>
-        <div v-else>
-          <el-input
-            v-model="scope.row.newPath"
-            :autofocus="true"
-            @blur="handleBlurEvent(scope.row)"
-          ></el-input>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="status" label="Status" />
-  </el-table>
-  <el-button class="primary rename_btn" @click="handleRenameBtnClickEvent"
-    >重命名</el-button
-  >
+  <h2 class="text-lg font-black my-5 text-center">文件重命名工具</h2>
+  <div class="flex flex-col items-center">
+    <el-button class="primary mb-5 flex-auto w-45" @click="handleBtnClick">选择文件夹</el-button>
+    <el-table :data="obj.tableData" style="width: 100%">
+      <el-table-column prop="oldPath" label="Old Name" />
+      <el-table-column prop="newPath" label="New Name">
+        <template #default="scope">
+          <div v-if="!scope.row.isRename" class="show_state" @click.stop="scope.row.isRename = true">
+            {{ scope.row.newPath }}
+          </div>
+          <div v-else>
+            <el-input v-model="scope.row.newPath" :autofocus="true" @blur="handleBlurEvent(scope.row)"></el-input>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="Status" />
+    </el-table>
+    <el-button class="primary mt-5 flex-auto w-45" @click="handleRenameBtnClickEvent">重命名</el-button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -85,8 +77,8 @@ export default defineComponent({
                   item.oldPath = okPath.newPath;
                   item.newPath = okPath.newPath;
                   setTimeout(() => {
-                    item.status = 'READY';
-                  },1000);
+                    item.status = "READY";
+                  }, 1000);
                 }
               });
             });
@@ -119,7 +111,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.rename_btn {
-  margin-top: 15px;
-}
 </style>>

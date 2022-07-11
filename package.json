@@ -8,13 +8,15 @@
     "electron:dev": "pnpm build:main && electron .",
     "build": "pnpm build:render && pnpm build:main && electron-builder",
     "build:preview": "pnpm build:render && pnpm build:main && pnpm build:package",
-    "build:render": "vue-tsc --noEmit && vite build",
+    "build:render:tsc": "vue-tsc --noEmit && vite build",
+    "build:render": "vite build",
     "build:main": "tsc -p src/main --outDir dist",
     "package": "electron-builder --dir",
     "preview": "vite preview"
   },
   "dependencies": {
     "element-plus": "^2.2.9",
+    "glob": "^8.0.3",
     "pinia": "^2.0.14",
     "vue": "^3.2.25",
     "vue-router": "4"
